@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.ApiGateway", "TrueCode.ApiGateway\TrueCode.ApiGateway.csproj", "{D7CFCD16-C61C-44A9-854D-F8EC8F12441F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.UserService", "TrueCode.UserService\TrueCode.UserService.csproj", "{7AA422C3-FD79-4B5B-8616-0E485859F77D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{D7CFCD16-C61C-44A9-854D-F8EC8F12441F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7CFCD16-C61C-44A9-854D-F8EC8F12441F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7CFCD16-C61C-44A9-854D-F8EC8F12441F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AA422C3-FD79-4B5B-8616-0E485859F77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AA422C3-FD79-4B5B-8616-0E485859F77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AA422C3-FD79-4B5B-8616-0E485859F77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AA422C3-FD79-4B5B-8616-0E485859F77D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
