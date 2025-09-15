@@ -6,9 +6,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.UserService", "Tru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.FinanceService", "TrueCode.FinanceService\TrueCode.FinanceService.csproj", "{CC0BE4CA-49ED-46D6-B7DA-B993F1107738}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.Migrations", "TrueCode.Migrations\TrueCode.Migrations.csproj", "{8C4F5A32-1262-4882-84AF-4BB377592746}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.CurrencyFillerService", "TrueCode.CurrencyFillerService\TrueCode.CurrencyFillerService.csproj", "{B32C15B6-4087-4DC9-9585-812D601AF427}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.MigrationService", "TrueCode.MigrationService\TrueCode.MigrationService.csproj", "{1923A7B7-6730-4C7E-A083-345EA8939880}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,13 +28,13 @@ Global
 		{CC0BE4CA-49ED-46D6-B7DA-B993F1107738}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC0BE4CA-49ED-46D6-B7DA-B993F1107738}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC0BE4CA-49ED-46D6-B7DA-B993F1107738}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8C4F5A32-1262-4882-84AF-4BB377592746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C4F5A32-1262-4882-84AF-4BB377592746}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C4F5A32-1262-4882-84AF-4BB377592746}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C4F5A32-1262-4882-84AF-4BB377592746}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B32C15B6-4087-4DC9-9585-812D601AF427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B32C15B6-4087-4DC9-9585-812D601AF427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B32C15B6-4087-4DC9-9585-812D601AF427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B32C15B6-4087-4DC9-9585-812D601AF427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1923A7B7-6730-4C7E-A083-345EA8939880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1923A7B7-6730-4C7E-A083-345EA8939880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1923A7B7-6730-4C7E-A083-345EA8939880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1923A7B7-6730-4C7E-A083-345EA8939880}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
