@@ -24,7 +24,9 @@ public class Program
 
         app.UseAuthorization();
 
-
+        app.MapGet("/", () => "Hello Gateway!");
         app.Run();
+        
+       
     }
 }
