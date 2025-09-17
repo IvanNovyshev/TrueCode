@@ -22,8 +22,9 @@ public class AccessTokenCreator : IAccessTokenCreator<User>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Name),
-            new Claim(ClaimTypes.Role, "getcurrency"),
-            new Claim(ClaimTypes.Role, "setcurrency"),
+            new Claim(ClaimTypes.Role, "GetCurrency"),
+            new Claim(ClaimTypes.Role, "SetCurrency"),
+            new Claim(ClaimTypes.Role, "MigrationAdmin"),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Уникальный ID токена
         };
 

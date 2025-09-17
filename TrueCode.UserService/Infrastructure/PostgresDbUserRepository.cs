@@ -1,4 +1,5 @@
 ﻿using LinqToDB;
+using LinqToDB.DataProvider.PostgreSQL;
 using TrueCode.UserService.Core;
 
 namespace TrueCode.UserService.Infrastructure;
@@ -26,11 +27,11 @@ public class PostgresDbUserRepository : IUserRepository
     public async Task<User> AddUserAsync(NewUser user)
     {
         // atomic insert with check
-        var id = await _context.Users.Where(x => !_context.Users.Any(db => db.Name == user.Name))
+        var id = await _context.Users.Where(x => !_context.Users.Any(db => db.Name == user.Name)).Take(1)
             .InsertWithInt32IdentityAsync(
                 _context.Users, db => new UserDb()
                     { Name = user.Name, Hash = user.Hash });
-
+        
         if (id == null)
         {
             throw new UserAlreadyExistsException { Name = user.Name };

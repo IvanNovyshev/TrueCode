@@ -1,5 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using FluentMigrator.Runner;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace TrueCode.MigrationService;
 
@@ -8,11 +14,32 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Token:Issuer"],
+                    ValidAudience = builder.Configuration["Token:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Token:Secret"] ??
+                                               throw new ArgumentException("Cannot obtain jwt secret")))
+                };
+            });
 
-        // Add services to the container.
+
         builder.Services.AddAuthorization();
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
         builder.Services.AddOpenApi();
         builder.Services.AddSingleton<IMigrationLock, SingletonMigrationLock>();
         builder.Services.AddScoped<IMigrationService, CommonMigrationService>();
@@ -25,7 +52,6 @@ public class Program
                     .Migrations()).AddLogging(lb => lb.AddFluentMigratorConsole());
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
@@ -33,10 +59,11 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
 
-        app.MapPost("/v1/migrate/up", async (IMigrationService ms) =>
+        app.MapPost("/v1/migrate/up", [Authorize(Roles = "MigrationAdmin")] async (IMigrationService ms) =>
         {
             try
             {
@@ -54,43 +81,45 @@ public class Program
             }
         });
 
-        app.MapPost("/v1/migrate/rollback/{step}", async (int step, IMigrationService ms) =>
-        {
-            try
+        app.MapPost("/v1/migrate/rollback/{step}", [Authorize(Roles = "MigrationAdmin")]
+            async (int step, IMigrationService ms) =>
             {
-                await ms.RollbackAsync(step);
-                return Results.Ok();
-            }
-            catch (MigrationException me)
-            {
-                return Results.Problem($"Rollback failed. {me.Message}");
-            }
-            catch (Exception e)
-            {
-                // internal
-                return Results.InternalServerError();
-            }
-        });
+                try
+                {
+                    await ms.RollbackAsync(step);
+                    return Results.Ok();
+                }
+                catch (MigrationException me)
+                {
+                    return Results.Problem($"Rollback failed. {me.Message}");
+                }
+                catch (Exception e)
+                {
+                    // internal
+                    return Results.InternalServerError();
+                }
+            });
 
-        app.MapPost("/v1/migrate/down/{version}", async (long version, IMigrationService ms) =>
-        {
-            try
+        app.MapPost("/v1/migrate/down/{version}", [Authorize(Roles = "MigrationAdmin")]
+            async (long version, IMigrationService ms) =>
             {
-                await ms.MigrateDownAsync(version);
-                return Results.Ok();
-            }
-            catch (MigrationException me)
-            {
-                return Results.Problem($"Migrate down failed. {me.Message}");
-            }
-            catch (Exception e)
-            {
-                // internal
-                return Results.InternalServerError();
-            }
-        });
+                try
+                {
+                    await ms.MigrateDownAsync(version);
+                    return Results.Ok();
+                }
+                catch (MigrationException me)
+                {
+                    return Results.Problem($"Migrate down failed. {me.Message}");
+                }
+                catch (Exception e)
+                {
+                    // internal
+                    return Results.InternalServerError();
+                }
+            });
 
-        app.MapGet("/v1/migrations", async (IMigrationService ms) =>
+        app.MapGet("/v1/migrations", [Authorize(Roles = "MigrationAdmin")] async (IMigrationService ms) =>
         {
             try
             {

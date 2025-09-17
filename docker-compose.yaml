@@ -42,6 +42,9 @@
     environment:
       - ASPNETCORE_URLS=http://+:8085
       - ConnectionStrings__dbConnection=${Migration_service_connection}
+      - Token__Secret=${JWT_SECRET}
+      - Token__Issuer=${JWT_ISSUER}
+      - Token__Audience=${JWT_AUDIENCE}
     depends_on:
       - postgres
     ports:
