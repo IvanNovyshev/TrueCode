@@ -1,4 +1,4 @@
-﻿namespace TrueCode.UserService.Users;
+﻿namespace TrueCode.UserService.Infrastructure;
 
 public class UserTokenCreationOptions
 {

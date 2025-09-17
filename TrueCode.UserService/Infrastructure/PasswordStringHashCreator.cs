@@ -1,10 +1,11 @@
 ﻿using System.Security.Cryptography;
+using TrueCode.UserService.Core;
 
-namespace TrueCode.UserService.Users;
+namespace TrueCode.UserService.Infrastructure;
 
-public class UserHashCreator : IHashCreator<User>
+public class PasswordStringHashCreator : IHashCreator<string>
 {
-    public string CreateHash(User user)
+    public string CreateHash(string password)
     {
         Span<byte> salt = stackalloc byte[16];
         RandomNumberGenerator.Fill(salt);
@@ -12,7 +13,7 @@ public class UserHashCreator : IHashCreator<User>
         Span<byte> hashSpan = stackalloc byte[32];
 
         Rfc2898DeriveBytes.Pbkdf2(
-            user.Password,
+            password,
             salt,
             hashSpan,
             100_000,

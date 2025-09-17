@@ -21,13 +21,69 @@
   user-service:
     build: ./TrueCode.UserService
     environment:
+      - ConnectionStrings__UserConnection=${User_service_connection}
       - ASPNETCORE_URLS=http://+:8083
+      - Token__Secret=${JWT_SECRET}
+      - Token__Issuer=${JWT_ISSUER}
+      - Token__Audience=${JWT_AUDIENCE}
+      - Token__ExpiredIn=${JWT_EXPIRES_IN}
     ports:
       - "8083:8083" 
         
   # filler service
   currency-filler-service:
     build: ./TrueCode.CurrencyFillerService
+    
+  # filler service
+  migration-service:
+    build: ./TrueCode.MigrationService
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_URLS=http://+:8085
+      - ConnectionStrings__dbConnection=${Migration_service_connection}
+    depends_on:
+      - postgres
+    ports:
+      - "8085:8085"
+  
+  # PostgreSQL база данных
+  postgres:
+    image: postgres:17
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d truecode"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # pgAdmin для управления БД (опционально)
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
   
 
 

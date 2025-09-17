@@ -3,11 +3,11 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TrueCode.UserService.Users;
+using TrueCode.UserService.Core;
 
-namespace TrueCode.UserService.Authentication;
+namespace TrueCode.UserService.Infrastructure;
 
-public class AccessTokenCreator : IAccessTokenCreator<UserDb>
+public class AccessTokenCreator : IAccessTokenCreator<User>
 {
     private readonly IOptionsMonitor<UserTokenCreationOptions> _optionsMonitor;
 
@@ -16,7 +16,7 @@ public class AccessTokenCreator : IAccessTokenCreator<UserDb>
         _optionsMonitor = optionsMonitor;
     }
 
-    public string CreateToken(UserDb user)
+    public string CreateToken(User user)
     {
         var claims = new[]
         {

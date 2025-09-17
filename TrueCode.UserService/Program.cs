@@ -1,7 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using TrueCode.UserService.Authentication;
+using TrueCode.UserService.Core;
 using TrueCode.UserService.Requests;
-using TrueCode.UserService.Users;
 
 namespace TrueCode.UserService;
 
@@ -11,27 +9,22 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
         builder.Services.AddAuthorization();
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         if (builder.Environment.IsDevelopment())
         {
-            builder.Services.AddDbContext<UserContext>(options => options.UseInMemoryDatabase("JustName"));
+            // можно замокать репозитории если нужно
         }
 
         builder.Services.AddUserServicesDependencies(builder.Configuration);
+
         var app = builder.Build();
-        
+
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            
-            using var scope = app.Services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<UserContext>();
-            context.Database.EnsureCreated();
         }
 
         app.UseHttpsRedirection();
@@ -40,11 +33,11 @@ public class Program
 
         app.MapPost("/user/logon", async (
             LogonUserRequest request,
-            IAuthenticationService<User, TryGetResult<string>> authService,
+            IAuthenticationService<UserLoginCommand, TryGetResult<string>> authService,
             ILogger<Program> logger) =>
         {
             var logonResult = await
-                authService.TryGetTokenAsync(new User { Name = request.Name, Password = request.Password });
+                authService.TryGetTokenAsync(new UserLoginCommand { Name = request.Name, Password = request.Password });
 
             if (logonResult.IsSuccess)
             {
@@ -52,7 +45,8 @@ public class Program
             }
 
             return Results.Unauthorized();
-        });
+        }).WithValidation<LogonUserRequest>();
+
 
         app.MapPost("/user/create", async (
             CreateUserRequest request,
@@ -61,21 +55,23 @@ public class Program
         {
             try
             {
-                //TODO validate paayload
-                await userService.CreateUserAsync(new User { Name = request.Name, Password = request.Password });
+                await userService.CreateUserAsync(new() { Name = request.Name, Password = request.Password });
                 return Results.Created();
             }
             catch (UserAlreadyExistsException e)
             {
                 logger.LogInformation("User with name {EName} already exists", e.Name);
-                return Results.Problem($"User with name {e.Name} already exists");
+                return Results.Conflict(new
+                {
+                    Title = "User already exists",
+                    Detail = $"User with name {e.Name} already exists",
+                });
             }
             catch
             {
-                //TODO
                 return Results.Problem();
             }
-        });
+        }).WithValidation<CreateUserRequest>();
 
         app.Run();
     }

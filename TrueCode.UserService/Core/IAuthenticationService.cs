@@ -1,4 +1,4 @@
-﻿namespace TrueCode.UserService.Authentication;
+﻿namespace TrueCode.UserService.Core;
 
 public interface IAuthenticationService<in TIn, TOut>
 {
