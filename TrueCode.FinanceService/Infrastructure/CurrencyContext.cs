@@ -1,7 +1,7 @@
 ﻿using LinqToDB;
 using LinqToDB.Data;
 
-namespace TrueCode.FinanceService;
+namespace TrueCode.FinanceService.Infrastructure;
 
 public class CurrencyContext : DataConnection
 {

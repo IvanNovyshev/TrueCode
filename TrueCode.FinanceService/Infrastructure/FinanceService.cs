@@ -1,7 +1,8 @@
 ﻿using LinqToDB;
 using LinqToDB.Data;
+using TrueCode.FinanceService.Core;
 
-namespace TrueCode.FinanceService;
+namespace TrueCode.FinanceService.Infrastructure;
 
 public class FinanceService : IFinanceService
 {

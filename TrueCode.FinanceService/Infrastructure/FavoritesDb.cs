@@ -1,6 +1,6 @@
 ﻿using LinqToDB.Mapping;
 
-namespace TrueCode.FinanceService;
+namespace TrueCode.FinanceService.Infrastructure;
 
 [Table("FavoriteCurrencies")]
 public class FavoritesDb

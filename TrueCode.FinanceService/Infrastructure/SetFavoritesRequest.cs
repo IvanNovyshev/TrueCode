@@ -1,4 +1,4 @@
-﻿namespace TrueCode.FinanceService;
+﻿namespace TrueCode.FinanceService.Infrastructure;
 
 public class SetFavoritesRequest
 {

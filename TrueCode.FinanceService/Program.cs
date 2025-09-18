@@ -1,6 +1,8 @@
 using LinqToDB;
 using LinqToDB.AspNet;
 using LinqToDB.AspNet.Logging;
+using TrueCode.FinanceService.Core;
+using TrueCode.FinanceService.Infrastructure;
 
 namespace TrueCode.FinanceService;
 
@@ -21,7 +23,7 @@ public class Program
                 .UsePostgreSQL(builder.Configuration.GetConnectionString("FinanceConnection") ??
                                throw new ArgumentException()));
 
-        builder.Services.AddScoped<IFinanceService, FinanceService>();
+        builder.Services.AddScoped<IFinanceService, Infrastructure.FinanceService>();
 
         var app = builder.Build();
 
