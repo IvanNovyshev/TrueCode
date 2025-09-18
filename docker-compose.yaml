@@ -12,8 +12,11 @@
   # finance service
   finance-service:
     build: ./TrueCode.FinanceService
+    env_file:
+      - .env
     environment:
       - ASPNETCORE_URLS=http://+:8084
+      - ConnectionStrings__FinanceConnection=${Finance_service_connection}
     ports:
       - "8084:8084"
   
@@ -28,8 +31,8 @@
       - Token__Audience=${JWT_AUDIENCE}
       - Token__ExpiredIn=${JWT_EXPIRES_IN}
     ports:
-      - "8083:8083" 
-        
+      - "8083:8083"
+  
   # filler service
   currency-filler-service:
     build: ./TrueCode.CurrencyFillerService
@@ -37,7 +40,7 @@
       - .env
     environment:
       - ConnectionStrings__FillerConnection=${Filler_service_connection}
-      
+  
   # filler service
   migration-service:
     build: ./TrueCode.MigrationService
@@ -70,7 +73,7 @@
       - ./init-scripts:/docker-entrypoint-initdb.d
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d truecode"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d truecode" ]
       interval: 5s
       timeout: 5s
       retries: 10
