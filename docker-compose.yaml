@@ -33,7 +33,11 @@
   # filler service
   currency-filler-service:
     build: ./TrueCode.CurrencyFillerService
-    
+    env_file:
+      - .env
+    environment:
+      - ConnectionStrings__FillerConnection=${Filler_service_connection}
+      
   # filler service
   migration-service:
     build: ./TrueCode.MigrationService

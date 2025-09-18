@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using System.Text;
 using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Authentication;
@@ -14,29 +15,35 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
-        builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
+
+        if (builder.Environment.IsProduction())
+        {
+            builder.Services.AddAuthentication(options =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = builder.Configuration["Token:Issuer"],
-                    ValidAudience = builder.Configuration["Token:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["Token:Secret"] ??
-                                               throw new ArgumentException("Cannot obtain jwt secret")))
-                };
-            });
-
-
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Token:Issuer"],
+                        ValidAudience = builder.Configuration["Token:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Token:Secret"] ??
+                                                   throw new ArgumentException("Cannot obtain jwt secret")))
+                    };
+                });
+        }
+        else
+        {
+            builder.Services.AddTransient<IAuthorizationService, DevAuthorizationService>();
+        }
+        
         builder.Services.AddAuthorization();
 
 
@@ -52,16 +59,18 @@ public class Program
                     .Migrations()).AddLogging(lb => lb.AddFluentMigratorConsole());
         var app = builder.Build();
 
+        app.UseHttpsRedirection();
+
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
         }
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthentication();
+        else
+        {
+            app.UseAuthentication();
+        }
+        
         app.UseAuthorization();
-
 
         app.MapPost("/v1/migrate/up", [Authorize(Roles = "MigrationAdmin")] async (IMigrationService ms) =>
         {
@@ -289,5 +298,18 @@ public class SingletonMigrationLock : IMigrationLock, IDisposable
 
             _disposed = true;
         }
+    }
+}
+
+public class DevAuthorizationService : IAuthorizationService
+{
+    public Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object? resource, IEnumerable<IAuthorizationRequirement> requirements)
+    {
+        return Task.FromResult(AuthorizationResult.Success());
+    }
+
+    public Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object? resource, string policyName)
+    {
+        return Task.FromResult(AuthorizationResult.Success());
     }
 }
