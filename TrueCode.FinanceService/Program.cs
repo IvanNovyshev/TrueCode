@@ -1,3 +1,7 @@
+using LinqToDB;
+using LinqToDB.AspNet;
+using LinqToDB.AspNet.Logging;
+
 namespace TrueCode.FinanceService;
 
 public class Program
@@ -12,6 +16,13 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+        builder.Services.AddLinqToDBContext<CurrencyContext>((provider, options) =>
+            options.UseDefaultLogging(provider)
+                .UsePostgreSQL(builder.Configuration.GetConnectionString("FinanceConnection") ??
+                               throw new ArgumentException()));
+
+        builder.Services.AddScoped<IFinanceService, FinanceService>();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -24,7 +35,13 @@ public class Program
 
         app.UseAuthorization();
 
-        app.MapGet("/", () => "Hello Finance!");
+        app.MapGet("/finances/favorites/{userName}",
+            async (string userName, IFinanceService service) => await service.GetFavorites(userName));
+
+        app.MapPost("/finances/favorites",
+            async (SetFavoritesRequest request, IFinanceService service) =>
+                await service.SetFavorites(new SetFavoritesCommand { Name = request.Name, Codes = request.Codes }));
+
         app.Run();
     }
 }

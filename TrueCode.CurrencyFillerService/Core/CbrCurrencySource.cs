@@ -27,7 +27,7 @@ public class CbrCurrencySource : ICurrencySource
 
         return (allCurrencies.Date, allCurrencies.Valutes.Select(x =>
                 new Currency()
-                    { Name = x.Name, Rate = x.Value })
+                    { Name = x.CharCode, Rate = x.Value })
             .ToArray()
             .AsReadOnly());
     }

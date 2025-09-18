@@ -51,3 +51,44 @@ public class AddFillerServiceInfoDb : Migration
         Delete.Table("FillerServiceInfo");
     }
 }
+
+[Migration(4)]
+public class AddFavoriteCurrencies : Migration
+{
+    public override void Up()
+    {
+        Create.Table("FavoriteCurrencies")
+            .WithColumn("Name").AsFixedLengthString(128).NotNullable()
+            .WithColumn("Code").AsFixedLengthString(64).NotNullable();
+
+        Create.PrimaryKey()
+            .OnTable("FavoriteCurrencies")
+            .Columns("Name", "Code");
+    }
+
+    public override void Down()
+    {
+        Delete.Table("FavoriteCurrencies");
+    }
+}
+
+[Migration(5)]
+public class AddIndexesFavoriteCurrencies : Migration
+{
+    public override void Up()
+    {
+        Create.Index("IX_FavoriteCurrencies_Name_Code")
+            .OnTable("FavoriteCurrencies")
+            .OnColumn("Name")
+            .Ascending()
+            .OnColumn("Code")
+            .Ascending()
+            .WithOptions().Unique();
+    }
+
+    public override void Down()
+    {
+        Delete.Index("IX_FavoriteCurrencies_Name_Code")
+            .OnTable("FavoriteCurrencies");
+    }
+}
