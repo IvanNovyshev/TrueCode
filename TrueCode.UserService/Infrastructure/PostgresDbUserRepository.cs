@@ -1,5 +1,6 @@
 ﻿using LinqToDB;
 using LinqToDB.DataProvider.PostgreSQL;
+using Npgsql;
 using TrueCode.UserService.Core;
 
 namespace TrueCode.UserService.Infrastructure;
@@ -26,18 +27,16 @@ public class PostgresDbUserRepository : IUserRepository
 
     public async Task<User> AddUserAsync(NewUser user)
     {
-        // atomic insert with check
-        var id = await _context.Users.Where(x => !_context.Users.Any(db => db.Name == user.Name)).Take(1)
-            .InsertWithInt32IdentityAsync(
-                _context.Users, db => new UserDb()
-                    { Name = user.Name, Hash = user.Hash });
-        
-        if (id == null)
+        try
         {
-            throw new UserAlreadyExistsException { Name = user.Name };
+            var id = await _context.Users.InsertWithInt32IdentityAsync(() => new UserDb
+                { Name = user.Name, Hash = user.Hash });
+            return new User { Id = id, Name = user.Name };
         }
-
-        return new User { Id = id.Value, Name = user.Name };
+        catch (PostgresException e) when (e.MessageText.Contains("duplicate"))
+        {
+            throw new UserAlreadyExistsException(e.Message, e) { Name = user.Name };
+        }
     }
 
 

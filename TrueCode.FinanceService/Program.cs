@@ -42,9 +42,10 @@ public class Program
         app.MapGet("/finances/favorites/{userName}",
             async (string userName, IFinanceService service) => await service.GetRatesForUserAsync(userName));
 
-        app.MapPost("/finances/favorites",
-            async (SetFavoritesRequest request, IFinanceService service) =>
-                await service.SetFavoritesCodesForUserAsync(new SetFavoritesCommand { Name = request.Name, Codes = request.Codes }));
+        app.MapPost("/finances/favorites/{userName}",
+            async (string userName, SetFavoritesRequest request, IFinanceService service) =>
+                await service.SetFavoritesCodesForUserAsync(new SetFavoritesCommand
+                    { Name = userName, Codes = request.Codes }));
 
         app.Run();
     }

@@ -92,3 +92,21 @@ public class AddIndexesFavoriteCurrencies : Migration
             .OnTable("FavoriteCurrencies");
     }
 }
+
+[Migration(6)]
+public class AddInsertUserProcedure : Migration
+{
+    public override void Up()
+    {
+        Execute.Sql("CREATE OR REPLACE FUNCTION insert_user_safe(p_name TEXT, p_age INT)" +
+                    "RETURNS INT AS $$BEGIN   " +
+                    " BEGIN      " +
+                    "  INSERT INTO users(name, age) VALUES (p_name, p_age);\n        RETURN 1; -- Успешно\n    EXCEPTION WHEN OTHERS THEN\n        RETURN 0; -- Ошибка\n    END;\nEND;\n$$ LANGUAGE plpgsql;");
+    }
+
+    public override void Down()
+    {
+        Delete.Index("IX_FavoriteCurrencies_Name_Code")
+            .OnTable("FavoriteCurrencies");
+    }
+}

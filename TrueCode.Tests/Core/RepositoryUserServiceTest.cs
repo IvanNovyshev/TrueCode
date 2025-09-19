@@ -38,7 +38,7 @@ public class RepositoryUserServiceTest
     {
         //Arrange
         userRepositoryStub.Setup(x => x.AddUserAsync(It.IsAny<NewUser>()))
-            .ThrowsAsync(new UserAlreadyExistsException { Name = command.Name });
+            .ThrowsAsync(new UserAlreadyExistsException("any") { Name = command.Name });
 
         //Act
         var act = async () => await sut.CreateUserAsync(command);

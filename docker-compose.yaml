@@ -5,9 +5,14 @@
   api-gateway:
     build: ./TrueCode.ApiGateway
     environment:
-      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Token__Secret=${JWT_SECRET}
+      - Token__Issuer=${JWT_ISSUER}
+      - Token__Audience=${JWT_AUDIENCE}
     ports:
       - "8080:8080"
+    networks:
+      - app-network
   
   # finance service
   finance-service:
@@ -15,23 +20,29 @@
     env_file:
       - .env
     environment:
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8084
       - ConnectionStrings__FinanceConnection=${Finance_service_connection}
-    ports:
-      - "8084:8084"
+    expose:
+      - "8084"
+    networks:
+      - app-network
   
   # user service
   user-service:
     build: ./TrueCode.UserService
     environment:
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__UserConnection=${User_service_connection}
       - ASPNETCORE_URLS=http://+:8083
       - Token__Secret=${JWT_SECRET}
       - Token__Issuer=${JWT_ISSUER}
       - Token__Audience=${JWT_AUDIENCE}
       - Token__ExpiredIn=${JWT_EXPIRES_IN}
-    ports:
-      - "8083:8083"
+    expose:
+      - "8083"
+    networks:
+      - app-network
   
   # filler service
   currency-filler-service:
@@ -40,6 +51,9 @@
       - .env
     environment:
       - ConnectionStrings__FillerConnection=${Filler_service_connection}
+    networks:
+      - app-network
+  
   
   # filler service
   migration-service:
@@ -56,6 +70,8 @@
       - postgres
     ports:
       - "8085:8085"
+    networks:
+      - app-network
   
   # PostgreSQL база данных
   postgres:
@@ -77,6 +93,8 @@
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - app-network
 
   # pgAdmin для управления БД (опционально)
   pgadmin:
@@ -91,9 +109,15 @@
     depends_on:
       - postgres
     restart: unless-stopped
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+    
+networks:
+  app-network:
+    driver: bridge
   
 
 
