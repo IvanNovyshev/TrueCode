@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TrueCode.FinanceService\TrueCode.FinanceService.csproj" />
+    <ProjectReference Include="..\TrueCode.UserService\TrueCode.UserService.csproj" />
   </ItemGroup>
   
 </Project>
