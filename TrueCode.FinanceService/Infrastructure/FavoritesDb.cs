@@ -5,6 +5,6 @@ namespace TrueCode.FinanceService.Infrastructure;
 [Table("FavoriteCurrencies")]
 public class FavoritesDb
 {
-    [Column("Name")] public required string Name { get; init; }
-    [Column("Code")] public required string Code { get; init; }
+    [Column("Name"), NotNull] public required string Name { get; init; }
+    [Column("Code"), NotNull] public required string Code { get; init; }
 }

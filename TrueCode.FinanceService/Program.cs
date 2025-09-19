@@ -23,7 +23,9 @@ public class Program
                 .UsePostgreSQL(builder.Configuration.GetConnectionString("FinanceConnection") ??
                                throw new ArgumentException()));
 
-        builder.Services.AddScoped<IFinanceService, Infrastructure.FinanceService>();
+        builder.Services.AddTransient<IUserFavoriteCodesRepository, UserFavoriteCodesRepository>();
+        builder.Services.AddScoped<ICurrencyRatesRepository, CurrencyRatesRepository>();
+        builder.Services.AddScoped<IFinanceService, Core.FinanceService>();
 
         var app = builder.Build();
 
@@ -38,11 +40,11 @@ public class Program
         app.UseAuthorization();
 
         app.MapGet("/finances/favorites/{userName}",
-            async (string userName, IFinanceService service) => await service.GetFavorites(userName));
+            async (string userName, IFinanceService service) => await service.GetRatesForUserAsync(userName));
 
         app.MapPost("/finances/favorites",
             async (SetFavoritesRequest request, IFinanceService service) =>
-                await service.SetFavorites(new SetFavoritesCommand { Name = request.Name, Codes = request.Codes }));
+                await service.SetFavoritesCodesForUserAsync(new SetFavoritesCommand { Name = request.Name, Codes = request.Codes }));
 
         app.Run();
     }

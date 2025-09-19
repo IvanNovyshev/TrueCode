@@ -2,7 +2,7 @@
 
 public interface IFinanceService
 {
-    public Task<IEnumerable<Currency>> GetFavorites(string name);
+    public Task<IEnumerable<Currency>> GetRatesForUserAsync(string name);
 
-    public Task SetFavorites(SetFavoritesCommand command);
+    public Task SetFavoritesCodesForUserAsync(SetFavoritesCommand command);
 }

@@ -6,6 +6,6 @@ namespace TrueCode.FinanceService.Infrastructure;
 public class CurrencyDb
 {
     [PrimaryKey, Identity] public int Id { get; init; }
-    [Column("Name")] public required string Name { get; init; }
-    [Column("Rate")] public required decimal Rate { get; init; }
+    [Column("Name"), NotNull] public required string Name { get; init; }
+    [Column("Rate"), NotNull] public required decimal Rate { get; init; }
 }
