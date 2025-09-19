@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
@@ -62,11 +63,31 @@ public class UserAuthenticationServiceTest
         //Arrange
         userRepositoryStub.Setup(x => x.GetUserByNameOrDefaultAsync(It.IsAny<string>())).ReturnsAsync(someUser);
         tokenCreatorStub.Setup(x => x.CreateToken(It.IsAny<User>())).Returns(expectedResult);
-        
+
         //Act
         var result = await sut.TryGetTokenAsync(command);
 
         //Assert
         result.Value.Should().Be(expectedResult);
+    }
+
+    [Test]
+    [AutoMoq]
+    public async Task TryGetTokenAsync_RepositoryThrowException_ShouldThrowServiceException(
+        [Frozen] Mock<IAccessTokenCreator<User>> tokenCreatorStub,
+        [Frozen] Mock<IUserRepository> userRepositoryStub,
+        User someUser,
+        string expectedResult,
+        UserLoginCommand command,
+        UserAuthenticationService sut)
+    {
+        //Arrange
+        userRepositoryStub.Setup(x => x.GetUserByNameOrDefaultAsync(It.IsAny<string>())).ThrowsAsync(new Exception());
+        
+        //Act
+        var result = async () => await sut.TryGetTokenAsync(command);
+
+        //Assert
+        await result.Should().ThrowExactlyAsync<UserAuthenticationException>();
     }
 }

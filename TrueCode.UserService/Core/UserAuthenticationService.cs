@@ -13,13 +13,27 @@ public class UserAuthenticationService : IAuthenticationService<UserLoginCommand
 
     public async Task<TryGetResult<string>> TryGetTokenAsync(UserLoginCommand command)
     {
-        var lfUser = await _repository.GetUserByNameOrDefaultAsync(command.Name);
-
-        if (lfUser == null)
+        try
         {
-            return TryGetResult<string>.Failed();
-        }
+            var lfUser = await _repository.GetUserByNameOrDefaultAsync(command.Name);
 
-        return TryGetResult<string>.Success(_accessTokenCreator.CreateToken(lfUser));
+            if (lfUser == null)
+            {
+                return TryGetResult<string>.Failed();
+            }
+
+            return TryGetResult<string>.Success(_accessTokenCreator.CreateToken(lfUser));
+        }
+        catch (Exception e)
+        {
+            throw new UserAuthenticationException(e.Message, e);
+        }
+    }
+}
+
+public class UserAuthenticationException : Exception
+{
+    public UserAuthenticationException(string message, Exception? e = null) : base(message, e)
+    {
     }
 }

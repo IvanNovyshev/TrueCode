@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.CurrencyFillerServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.MigrationService", "TrueCode.MigrationService\TrueCode.MigrationService.csproj", "{1923A7B7-6730-4C7E-A083-345EA8939880}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.FinanceService.Tests", "TrueCode.FinanceService.Tests\TrueCode.FinanceService.Tests.csproj", "{6DE8B474-6F3B-4FE2-884B-8EDA1D6FDF87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.Tests", "TrueCode.Tests\TrueCode.Tests.csproj", "{6DE8B474-6F3B-4FE2-884B-8EDA1D6FDF87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

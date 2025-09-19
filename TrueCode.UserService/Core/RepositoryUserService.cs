@@ -14,6 +14,18 @@ public class RepositoryUserService : IUserService
 
     public async Task CreateUserAsync(CreateUserCommand user)
     {
-        await _repository.AddUserAsync(new NewUser { Name = user.Name, Hash = _hashCreator.CreateHash(user.Password) });
+        try
+        {
+            await _repository.AddUserAsync(new NewUser
+                { Name = user.Name, Hash = _hashCreator.CreateHash(user.Password) });
+        }
+        catch (UserAlreadyExistsException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            throw new CreateUserException(e.Message, e.InnerException);
+        }
     }
 }

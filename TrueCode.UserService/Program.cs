@@ -36,15 +36,23 @@ public class Program
             IAuthenticationService<UserLoginCommand, TryGetResult<string>> authService,
             ILogger<Program> logger) =>
         {
-            var logonResult = await
-                authService.TryGetTokenAsync(new UserLoginCommand { Name = request.Name, Password = request.Password });
-
-            if (logonResult.IsSuccess)
+            try
             {
-                return Results.Ok(logonResult.Value);
-            }
+                var logonResult = await
+                    authService.TryGetTokenAsync(new UserLoginCommand
+                        { Name = request.Name, Password = request.Password });
 
-            return Results.Unauthorized();
+                if (logonResult.IsSuccess)
+                {
+                    return Results.Ok(logonResult.Value);
+                }
+
+                return Results.Unauthorized();
+            }
+            catch (UserAuthenticationException e)
+            {
+                return Results.Problem();
+            }
         }).WithValidation<LogonUserRequest>();
 
 
