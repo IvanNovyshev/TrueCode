@@ -2,9 +2,9 @@
 
 public interface IUserFavoriteCodesRepository
 {
-    Task AddFavoriteCodesForUser(string userName, IReadOnlyCollection<string> codes);
+    Task AddFavoriteCodesForUserAsync(string userName, IReadOnlyCollection<string> codes);
     
-    Task RemoveFavoriteCodesByUserName(string userName);
+    Task RemoveFavoriteCodesByUserNameAsync(string userName);
 
     IQueryable<string> GetFavoriteCodes(string userName);
 

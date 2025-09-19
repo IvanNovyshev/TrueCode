@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.CurrencyFillerServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.MigrationService", "TrueCode.MigrationService\TrueCode.MigrationService.csproj", "{1923A7B7-6730-4C7E-A083-345EA8939880}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueCode.FinanceService.Tests", "TrueCode.FinanceService.Tests\TrueCode.FinanceService.Tests.csproj", "{6DE8B474-6F3B-4FE2-884B-8EDA1D6FDF87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{1923A7B7-6730-4C7E-A083-345EA8939880}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1923A7B7-6730-4C7E-A083-345EA8939880}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1923A7B7-6730-4C7E-A083-345EA8939880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DE8B474-6F3B-4FE2-884B-8EDA1D6FDF87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DE8B474-6F3B-4FE2-884B-8EDA1D6FDF87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DE8B474-6F3B-4FE2-884B-8EDA1D6FDF87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DE8B474-6F3B-4FE2-884B-8EDA1D6FDF87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

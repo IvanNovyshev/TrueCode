@@ -1,11 +1,11 @@
 ﻿namespace TrueCode.FinanceService.Core;
 
-public class FinanceService : IFinanceService
+public class MainFinanceService : IFinanceService
 {
     private readonly IUserFavoriteCodesRepository _userFavoriteCodesRepository;
     private readonly ICurrencyRatesRepository _ratesRepository;
 
-    public FinanceService(IUserFavoriteCodesRepository userFavoriteCodesRepository,
+    public MainFinanceService(IUserFavoriteCodesRepository userFavoriteCodesRepository,
         ICurrencyRatesRepository ratesRepository)
     {
         _userFavoriteCodesRepository = userFavoriteCodesRepository;
@@ -32,8 +32,8 @@ public class FinanceService : IFinanceService
     {
         try
         {
-            await _userFavoriteCodesRepository.RemoveFavoriteCodesByUserName(command.Name);
-            await _userFavoriteCodesRepository.AddFavoriteCodesForUser(command.Name, command.Codes);
+            await _userFavoriteCodesRepository.RemoveFavoriteCodesByUserNameAsync(command.Name);
+            await _userFavoriteCodesRepository.AddFavoriteCodesForUserAsync(command.Name, command.Codes);
 
             await _userFavoriteCodesRepository.SaveAsync();
         }

@@ -25,7 +25,7 @@ public class Program
 
         builder.Services.AddTransient<IUserFavoriteCodesRepository, UserFavoriteCodesRepository>();
         builder.Services.AddScoped<ICurrencyRatesRepository, CurrencyRatesRepository>();
-        builder.Services.AddScoped<IFinanceService, Core.FinanceService>();
+        builder.Services.AddScoped<IFinanceService, MainFinanceService>();
 
         var app = builder.Build();
 

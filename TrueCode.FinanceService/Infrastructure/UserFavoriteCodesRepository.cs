@@ -16,13 +16,13 @@ public class UserFavoriteCodesRepository : IUserFavoriteCodesRepository
         _context = context;
     }
 
-    public Task RemoveFavoriteCodesByUserName(string userName)
+    public Task RemoveFavoriteCodesByUserNameAsync(string userName)
     {
         _removeList.Add(userName);
         return Task.CompletedTask;
     }
 
-    public Task AddFavoriteCodesForUser(string userName, IReadOnlyCollection<string> codes)
+    public Task AddFavoriteCodesForUserAsync(string userName, IReadOnlyCollection<string> codes)
     {
         _favoriteList.Add((userName, codes));
         return Task.CompletedTask;
@@ -52,6 +52,11 @@ public class UserFavoriteCodesRepository : IUserFavoriteCodesRepository
         {
             await transaction.RollbackAsync();
             throw;
+        }
+        finally
+        {
+            _removeList.Clear();
+            _favoriteList.Clear();
         }
     }
 }
