@@ -2,22 +2,24 @@
 
 
 POSTGRES_DB=your_database_name
+
 POSTGRES_USER=your_postgres_user
+
 POSTGRES_PASSWORD=your_secure_password_here
 
-
 PGADMIN_DEFAULT_EMAIL=your_admin_email@example.com
+
 PGADMIN_DEFAULT_PASSWORD=your_pgadmin_password
 
-
 JWT_SECRET=your_very_long_and_secure_jwt_secret_key_here_min_64_chars
+
 JWT_ISSUER=Your_Application_Name
+
 JWT_AUDIENCE=Your_Application_Audience
+
 JWT_EXPIRES_IN=01:00:00
 
-
 Migration_service_connection=your_connection_string
-
 
 User_service_connection=your_connection_string
 
